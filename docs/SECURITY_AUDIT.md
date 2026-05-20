@@ -2,7 +2,7 @@
 
 **Audit date:** May 21, 2026  
 **Auditor role:** Blockchain security / malware analysis (paranoid pass)  
-**Repository:** `polymarket-weather-trading-bot-main` (17 source files + docs/scripts)  
+**Repository:** `polymarket-weather-bot` (17 source files + docs/scripts)  
 **Revision:** v3 — Docker + Vercel gateways, `package-lock.json` verified, malware absent from lockfile  
 
 ---
