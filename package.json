@@ -18,7 +18,10 @@
     "reset": "npm run build && node dist/index.js --reset",
     "preflight": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/security-preflight.ps1",
     "local:safe": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run-local.ps1",
-    "production:live": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run-production.ps1",
+    "production:live": "scripts\\run-production.bat",
+    "production:live:unix": "bash scripts/run-production.sh",
+    "setup:env": "scripts\\setup-env.cmd",
+    "setup:env:unix": "bash scripts/setup-env.sh",
     "docker:local": "docker compose --profile local up --build --abort-on-container-exit",
     "docker:production": "docker compose --profile production up --build"
   },

@@ -4,9 +4,16 @@ Use this with [SECURITY_AUDIT.md](./SECURITY_AUDIT.md). **Never use your main Me
 
 ## Quick path
 
-1. Run **`scripts\run-local.bat`** (Windows) or **`./scripts/run-local.sh`** (Mac/Linux) several times.
+1. Run safe mode several times:
+   - Windows: `scripts\run-local.bat`
+   - macOS/Linux: `./scripts/run-local.sh`
 2. Use a **new burner wallet** and small pUSD only.
-3. Run **`scripts\run-production.bat`** only after you understand the output.
+3. Run production (creates `.env` automatically):
+   - Windows: `scripts\run-production.bat`
+   - macOS/Linux: `./scripts/run-production.sh`
+   - Docker: `docker-run-production.bat` / `.sh`
+
+See [../scripts/PRODUCTION.md](../scripts/PRODUCTION.md).
 
 ## If you used an old copy of this repo
 

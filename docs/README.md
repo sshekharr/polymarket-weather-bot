@@ -1,38 +1,29 @@
 # Documentation
 
-| Document | Who it is for |
-|----------|----------------|
-| [GETTING_STARTED.md](./GETTING_STARTED.md) | **Non-programmers** — Windows, Docker, Vercel |
-| [DOCKER.md](./DOCKER.md) | **Docker** one-click |
-| [VERCEL.md](./VERCEL.md) | **Vercel** (health API only — not trading) |
-| [SECURITY_AUDIT.md](./SECURITY_AUDIT.md) | **Security review** — full 8-phase audit |
-| [SAFE_EXECUTION.md](./SAFE_EXECUTION.md) | **Operators** — firewall, burner wallet |
+| Document | Audience |
+|----------|----------|
+| [GETTING_STARTED.md](./GETTING_STARTED.md) | **Everyone** — Windows, macOS, Linux, Docker, Vercel |
+| [../scripts/PRODUCTION.md](../scripts/PRODUCTION.md) | **Live trading** — all production scripts by OS |
+| [DOCKER.md](./DOCKER.md) | Docker one-click |
+| [VERCEL.md](./VERCEL.md) | Vercel (health only) |
+| [SECURITY_AUDIT.md](./SECURITY_AUDIT.md) | Security audit |
+| [SAFE_EXECUTION.md](./SAFE_EXECUTION.md) | Hardening |
 
-## One-click scripts
+## Production (live trading) — by OS
 
-### Windows — local PC
+| OS | Setup `.env` | Live on PC | Live in Docker |
+|----|--------------|------------|----------------|
+| **Windows** | `scripts\setup-env.cmd` | `scripts\run-production.bat` | `scripts\docker-run-production.bat` |
+| **macOS / Linux** | `./scripts/setup-env.sh` | `./scripts/run-production.sh` | `./scripts/docker-run-production.sh` |
 
-| Script | What it does |
-|--------|----------------|
-| `scripts\run-local.bat` | Safe — **no real money** |
-| `scripts\run-local-paper.bat` | Paper — virtual balance |
-| `scripts\run-production.bat` | Live — **real money** + `.env` |
-| `scripts\run-positions.bat` | Show paper positions (works in cmd; fixes PowerShell npm block) |
-| `scripts\run-reset.bat` | Reset virtual $1000 balance |
+All production scripts: create `.env` → confirm `YES` → preflight → install → build → execute.
 
-### Windows — Docker
+**Vercel:** monitoring only — not for trading.
 
-| Script | What it does |
-|--------|----------------|
-| `scripts\docker-run-local.bat` | Safe in container |
-| `scripts\docker-run-local-paper.bat` | Paper in container |
-| `scripts\docker-run-production.bat` | Live in container + `.env` |
+## Safe / paper (no real money)
 
-### Vercel (monitoring only)
-
-| Script | What it does |
-|--------|----------------|
-| `scripts\vercel-deploy-local.bat` | Preview deploy `/api/health` |
-| `scripts\vercel-deploy-production.bat` | Production health API — **not trading** |
-
-macOS/Linux: `chmod +x scripts/*.sh` — see [GETTING_STARTED.md](./GETTING_STARTED.md).
+| OS | Signal | Paper |
+|----|--------|-------|
+| Windows | `run-local.bat` | `run-local-paper.bat` |
+| macOS / Linux | `run-local.sh` | `npm run paper` |
+| Docker | `docker-run-local.bat` / `.sh` | `docker-run-local-paper.bat` |

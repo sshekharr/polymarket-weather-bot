@@ -1,50 +1,43 @@
-# Vercel — What It Can and Cannot Do
+# Vercel — All Platforms (Health API Only)
 
 ## Important
 
-**Vercel is NOT for live Polymarket trading.**
+**Vercel cannot run live Polymarket trading.** No private keys on Vercel.
 
-| Feature | Vercel | Docker / local scripts |
-|---------|--------|-------------------------|
-| Long-running bot loop | No (serverless timeout) | Yes |
-| Store private key safely | **Never put keys on Vercel** | `.env` on your PC |
-| Real `--execute` orders | **Not supported** | Yes |
-| Health / connectivity check | Yes | Yes |
+| Feature | Vercel | PC / Docker production scripts |
+|---------|--------|--------------------------------|
+| Long-running bot | No | Yes |
+| Store `POLYMARKET_PRIVATE_KEY` | **Never** | `.env` on your machine |
+| Real orders | No | Yes |
 
-## What we deploy to Vercel
+---
+
+## One-click deploy
+
+| Goal | Windows | macOS / Linux |
+|------|---------|---------------|
+| Preview | `scripts\vercel-deploy-local.bat` | `./scripts/vercel-deploy-local.sh` |
+| Production URL | `scripts\vercel-deploy-production.bat` | `./scripts/vercel-deploy-production.sh` |
+
+First time: install Node.js, then run the script — log in to Vercel when the browser opens.
+
+---
+
+## Endpoints after deploy
 
 | URL | Purpose |
 |-----|---------|
-| `/api/health` | Status + security notice (no secrets) |
-| `/api/connectivity-check` | Public gamma-api ping (read-only) |
+| `/api/health` | Status + security notice |
+| `/api/connectivity-check` | Public gamma-api ping |
 
-## One-click deploy (Windows)
+---
 
-| Script | Action |
-|--------|--------|
-| `scripts\vercel-deploy-local.bat` | Preview deploy (`npx vercel`) |
-| `scripts\vercel-deploy-production.bat` | Production deploy — **health API only** |
+## Live trading instead
 
-## First-time Vercel setup
+| OS | Script |
+|----|--------|
+| Windows | `scripts\run-production.bat` |
+| macOS / Linux | `./scripts/run-production.sh` |
+| Docker | `docker-run-production.bat` / `.sh` |
 
-1. Create account: https://vercel.com
-2. Install Node.js (for `npx vercel`).
-3. Double-click `scripts\vercel-deploy-local.bat`.
-4. Log in in the browser when prompted.
-5. Open the URL shown + `/api/health`.
-
-## Environment variables on Vercel
-
-**Do not add:**
-
-- `POLYMARKET_PRIVATE_KEY`
-- `POLYMARKET_PROXY_WALLET_ADDRESS`
-
-If you need automation with real money, use **Docker** on a VPS or your PC with [DOCKER.md](./DOCKER.md), not Vercel.
-
-## Live trading path
-
-Use one of:
-
-- `scripts\run-production.bat`
-- `scripts\docker-run-production.bat`
+See [PRODUCTION.md](../scripts/PRODUCTION.md).

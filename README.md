@@ -1,7 +1,8 @@
 # Polymarket Weather Trading Bot
 
 > **Security:** Full audit in [docs/SECURITY_AUDIT.md](docs/SECURITY_AUDIT.md). Non-programmer setup: [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md).  
-> **One-click (Windows):** safe test → `scripts\run-local.bat` · live trading → `scripts\run-production.bat` (burner wallet only).
+> **Scripts:** [scripts/PRODUCTION.md](scripts/PRODUCTION.md) · **Guide:** [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md)  
+> **Live (Windows):** `scripts\run-production.bat` · **Live (Mac/Linux):** `./scripts/run-production.sh` (burner wallet only).
 
 Node.js / TypeScript trading automation for Polymarket daily temperature markets. The bot fuses multi-region weather forecasts (NWS for US cities, Open-Meteo for international cities) with Polymarket CLOB pricing: it maps each city's forecast max temperature to the matching market bucket, then either prints read-only signals, paper-trades against a local JSON ledger, or posts real CLOB limit orders.
 
@@ -55,15 +56,17 @@ Weather forecast (NWS / Open-Meteo) + city list
 
 ## Quick start (one-click)
 
-| Mode | Windows (PC) | Docker | Vercel |
-|------|----------------|--------|--------|
-| **Safe / local** | `scripts\run-local.bat` | `scripts\docker-run-local.bat` | `scripts\vercel-deploy-local.bat` (health API only) |
-| **Paper** | `scripts\run-local-paper.bat` | `scripts\docker-run-local-paper.bat` | — |
-| **Live / production** | `scripts\run-production.bat` | `scripts\docker-run-production.bat` | **Not supported** — use PC or Docker |
+| Mode | Windows | macOS / Linux | Docker |
+|------|---------|---------------|--------|
+| **Safe** | `scripts\run-local.bat` | `./scripts/run-local.sh` | `docker-run-local.bat` / `.sh` |
+| **Paper** | `scripts\run-local-paper.bat` | `npm run paper` | `docker-run-local-paper.bat` |
+| **Live** | `scripts\run-production.bat` | `./scripts/run-production.sh` | `docker-run-production.bat` / `.sh` |
 
-**Vercel does not run live trading.** See [docs/VERCEL.md](docs/VERCEL.md).
+| Vercel (health only) | Windows | macOS / Linux |
+|----------------------|---------|---------------|
+| Deploy | `vercel-deploy-local.bat` | `./scripts/vercel-deploy-local.sh` |
 
-Non-programmer guide: [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md) · Docker: [docs/DOCKER.md](docs/DOCKER.md)
+Live scripts **create `.env` automatically**. Vercel cannot trade. [scripts/PRODUCTION.md](scripts/PRODUCTION.md) · [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md)
 
 ## Installation
 

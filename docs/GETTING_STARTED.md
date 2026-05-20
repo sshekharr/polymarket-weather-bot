@@ -5,162 +5,155 @@ This bot checks weather forecasts and Polymarket temperature markets. You can ru
 **Rules:**
 
 - Use a **burner wallet** (new MetaMask account) for live trading — never your main wallet.
-- **Do not** put your private key on Vercel (cloud website hosting).
-- Prefer **local** or **Docker** for real trading.
+- **Do not** put your private key on Vercel.
+- Production scripts **create `.env` for you** on every OS before live trading.
+
+Full script list: [../scripts/PRODUCTION.md](../scripts/PRODUCTION.md)
 
 ---
 
-## Choose how you want to run the bot
+## Choose how you run the bot
 
-| Way | Best for | Real money? |
-|-----|----------|-------------|
-| **A. Windows double-click** | Easiest on Windows | Only with `run-production.bat` |
-| **B. Docker** | Isolation, same on Mac/Windows | Only with `docker-run-production.bat` |
-| **C. Vercel (cloud)** | Health check URL only | **Never** — not for trading |
-
----
-
-# Way A — Windows (no Docker)
-
-## Part 1 — Install Node.js (one time)
-
-1. Go to **https://nodejs.org/**
-2. Download **LTS**, install with defaults.
-3. Press **Windows key**, type `cmd`, Enter.
-4. Type `node -v` — you should see a version like `v20.x.x`.
-
-## Part 2 — Get the project folder
-
-Example: `C:\Users\YourName\Desktop\polymarket-weather-trading-bot-main`
-
-## Part 3 — Safe test (no money)
-
-1. Open folder → `scripts`
-2. Double-click **`run-local.bat`**
-3. Wait (first time installs packages). Colored text = weather + markets. **No bets placed.**
-
-No `.env` file needed for this step.
-
-## Part 4 — Paper trading (pretend money)
-
-1. Double-click **`run-local-paper.bat`**
-2. Still **no real money** — uses `simulation.json` on your PC.
-
-## Part 5 — Live trading (real money)
-
-1. MetaMask → **new account** (burner).
-2. Copy **private key** and Polymarket **proxy address** from polymarket.com/settings.
-3. Copy `.env.example` → rename to **`.env`**, fill in keys (Notepad).
-4. Double-click **`run-production.bat`**
-5. Type **`YES`** only if you accept real losses.
+| Way | Windows | macOS / Linux | Real money? |
+|-----|---------|---------------|-------------|
+| **On your PC** | `run-local.bat` / `run-production.bat` | `run-local.sh` / `run-production.sh` | Production only |
+| **Docker** | `docker-run-*.bat` | `docker-run-*.sh` | Production only |
+| **Vercel** | `vercel-deploy-*.bat` | `vercel-deploy-*.sh` | **Never** |
 
 ---
 
-# Way B — Docker (recommended for isolation)
+# Windows
 
-## Part 1 — Install Docker Desktop
+## 1 — Install Node.js (once)
 
-1. **https://www.docker.com/products/docker-desktop/**
-2. Install and **start** Docker (whale icon running).
+1. **https://nodejs.org/** → download **LTS** → install.
+2. In **cmd**: `node -v` should print a version.
+
+## 2 — Safe test (no money)
+
+Double-click **`scripts\run-local.bat`** — no `.env` needed.
+
+## 3 — Paper (fake money)
+
+Double-click **`scripts\run-local-paper.bat`**
+
+## 4 — Live (real money)
+
+1. New **burner** MetaMask account + small pUSD on Polymarket.
+2. Double-click **`scripts\run-production.bat`**
+3. Notepad opens → paste private key + proxy address → **save** → close.
+4. Type **`YES`**.
+
+**`.env` only (no trading):** `scripts\setup-env.cmd`
+
+---
+
+# macOS / Linux
+
+## 1 — Install Node.js (once)
+
+Install from **https://nodejs.org/** or your package manager. Check: `node -v`
+
+## 2 — Make scripts executable (once)
+
+```bash
+cd /path/to/polymarket-weather-trading-bot-main
+chmod +x scripts/*.sh
+```
+
+## 3 — Safe test (no money)
+
+```bash
+./scripts/run-local.sh
+```
+
+## 4 — Paper (fake money)
+
+```bash
+./scripts/run-local-paper.sh
+```
+
+Or: `npm run paper` (after `npm ci` and `npm run build`).
+
+## 5 — Live (real money)
+
+```bash
+./scripts/run-production.sh
+```
+
+1. Creates/edits **`.env`** (TextEdit on Mac, nano on Linux).
+2. Type **`YES`**
+3. Installs, builds, runs live orders.
+
+**`.env` only:**
+
+```bash
+./scripts/setup-env.sh
+# or: npm run setup:env:unix
+```
+
+---
+
+# Docker (Windows, macOS, Linux)
+
+## Install Docker Desktop
+
+**https://www.docker.com/products/docker-desktop/** — start the app before running scripts.
 
 Details: [DOCKER.md](./DOCKER.md)
 
-## Part 2 — One-click Docker
+| Goal | Windows | macOS / Linux |
+|------|---------|---------------|
+| Safe | `scripts\docker-run-local.bat` | `./scripts/docker-run-local.sh` |
+| Paper | `scripts\docker-run-local-paper.bat` | `npm run paper` or compose profile `paper` |
+| Live | `scripts\docker-run-production.bat` | `./scripts/docker-run-production.sh` |
 
-| Double-click | What happens |
-|--------------|----------------|
-| **`scripts\docker-run-local.bat`** | Safe scan, no real money |
-| **`scripts\docker-run-local-paper.bat`** | Fake money |
-| **`scripts\docker-run-production.bat`** | Real trading — needs `.env` + YES |
-
-First Docker run downloads a image (5–15 minutes once).
+Live Docker scripts run **setup-env** first, then ask for **`YES`**.
 
 ---
 
-# Way C — Vercel (cloud — NOT for trading)
+# Vercel (health check only — all OS)
 
-Use this only to get a **status webpage**, not to trade.
+| Goal | Windows | macOS / Linux |
+|------|---------|---------------|
+| Preview | `scripts\vercel-deploy-local.bat` | `./scripts/vercel-deploy-local.sh` |
+| Production URL | `scripts\vercel-deploy-production.bat` | `./scripts/vercel-deploy-production.sh` |
 
-1. Install Node.js (Part 1 above).
-2. Double-click **`scripts\vercel-deploy-local.bat`**
-3. Log in to Vercel in the browser.
-4. Visit: `https://your-project.vercel.app/api/health`
+Visit `/api/health` after deploy. **Never** add wallet keys on Vercel.
 
-**Never** add `POLYMARKET_PRIVATE_KEY` in Vercel settings.
-
-Full explanation: [VERCEL.md](./VERCEL.md)
+[VERCEL.md](./VERCEL.md)
 
 ---
 
-## If something goes wrong
+## npm commands (any OS)
+
+| Command | Platform |
+|---------|----------|
+| `npm run setup:env` | Windows |
+| `npm run setup:env:unix` | macOS / Linux |
+| `npm run production:live` | Windows |
+| `npm run production:live:unix` | macOS / Linux |
+| `npm run docker:production` | Docker |
+
+---
+
+## Troubleshooting
 
 | Problem | Fix |
 |---------|-----|
-| `npm.ps1 cannot be loaded` / execution policy | Use **`scripts\run-positions.bat`** or open **cmd.exe** (not PowerShell), or run: `npm.cmd run positions` |
-| SSL / certificate error on `npm install` | Try home Wi‑Fi; see IT for work VPN |
-| `sleek-pretty` in red error | Old infected copy — use this cleaned repo only |
-| Docker “not running” | Start Docker Desktop |
-| Live mode “missing .env” | Create `.env` from `.env.example` |
-| Vercel timeout | Normal — Vercel cannot run the full trading loop |
-| Positions empty after Docker paper | State is in **`data\simulation.json`** — use `scripts\run-positions.bat` |
+| `npm.ps1 cannot be loaded` (Windows) | Use `.bat` scripts or `npm.cmd` |
+| Missing `.env` | Run `setup-env` for your OS (see [PRODUCTION.md](../scripts/PRODUCTION.md)) |
+| Docker `EISDIR simulation.json` | Run `docker-init-data` / use `data/simulation.json` |
+| `sleek-pretty` error | Old infected repo — use this cleaned copy only |
+| Positions after Docker paper | `scripts\run-positions.bat` or set `SIMULATION_FILE=./data/simulation.json` |
 
 ---
 
-## Security check (optional)
+## Security
 
-```powershell
-cd C:\Users\Chama\Desktop\polymarket-weather-trading-bot-main
-npm run preflight
-```
+- [SECURITY_AUDIT.md](./SECURITY_AUDIT.md)
+- [SAFE_EXECUTION.md](./SAFE_EXECUTION.md)
 
-- Full audit: [SECURITY_AUDIT.md](./SECURITY_AUDIT.md)
-- Hardening: [SAFE_EXECUTION.md](./SAFE_EXECUTION.md)
+## Old `sleek-pretty` malware
 
----
-
-## Quick reference — all one-click scripts
-
-### Windows — on your PC
-
-| Goal | Script |
-|------|--------|
-| Safe test | `scripts\run-local.bat` |
-| Paper | `scripts\run-local-paper.bat` |
-| Live | `scripts\run-production.bat` |
-| View positions | `scripts\run-positions.bat` |
-| Reset paper $1000 | `scripts\run-reset.bat` |
-
-### Windows — Docker
-
-| Goal | Script |
-|------|--------|
-| Safe | `scripts\docker-run-local.bat` |
-| Paper | `scripts\docker-run-local-paper.bat` |
-| Live | `scripts\docker-run-production.bat` |
-
-### Vercel (health only)
-
-| Goal | Script |
-|------|--------|
-| Preview URL | `scripts\vercel-deploy-local.bat` |
-| Production URL | `scripts\vercel-deploy-production.bat` |
-
----
-
-## Old version warning
-
-An older copy had malware package **`sleek-pretty`** that stole `.env` files.
-
-If you used that version:
-
-1. Move funds off that wallet.
-2. Create a **new** wallet and new `.env`.
-3. Delete `node_modules` and run `run-local.bat` again.
-
----
-
-## More help
-
-- [README.md](../README.md) — technical details  
-- [DOCKER.md](./DOCKER.md) — Docker  
-- [VERCEL.md](./VERCEL.md) — Vercel limits  
+If you ran an old copy: rotate keys, new wallet, delete `node_modules`, reinstall.

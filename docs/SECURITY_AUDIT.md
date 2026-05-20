@@ -75,9 +75,11 @@ The earlier score mixed **malware risk** with **unfinished install verification*
 ├── vercel.json
 ├── scripts/
 │   ├── security-preflight.ps1/.sh
+│   ├── setup-env.cmd / setup-env.sh
 │   ├── run-local / run-production (.bat, .ps1, .sh)
 │   ├── docker-run-local / docker-run-production (.bat, .sh)
-│   └── vercel-deploy-local / vercel-deploy-production (.bat)
+│   ├── vercel-deploy-local / vercel-deploy-production (.bat, .sh)
+│   └── PRODUCTION.md (script index by OS)
 ├── src/
 │   ├── index.ts          # Entry: CLI, dotenv, validateKeys, modes
 │   ├── config.ts         # process.env → BotConfig

@@ -1,59 +1,57 @@
-# Docker — One-Click Guide
+# Docker — One-Click Guide (Windows, macOS, Linux)
 
-Docker runs the bot in an isolated container. **Secrets stay in `.env` on your machine** — they are not baked into the image.
+Docker runs the bot in a container. Secrets stay in **`.env` on your host** — not baked into the image.
 
-## Install Docker Desktop (one time)
+## Install Docker Desktop
 
-1. Download: https://www.docker.com/products/docker-desktop/
-2. Install and start Docker Desktop (whale icon in system tray must be running).
+https://www.docker.com/products/docker-desktop/
 
-## One-click (Windows)
+Start Docker before running any script below.
 
-| Double-click | Mode |
-|--------------|------|
-| `scripts\docker-run-local.bat` | **Signal** — no real money |
-| `scripts\docker-run-local-paper.bat` | **Paper** — fake balance |
-| `scripts\docker-run-production.bat` | **Live** — needs `.env` + type YES |
+---
 
-## One-click (Mac/Linux)
+## One-click scripts
 
-```bash
-chmod +x scripts/docker-run-local.sh scripts/docker-run-production.sh
-./scripts/docker-run-local.sh
-# Live:
-./scripts/docker-run-production.sh
-```
+| Goal | Windows | macOS / Linux |
+|------|---------|---------------|
+| Safe (signal) | `scripts\docker-run-local.bat` | `./scripts/docker-run-local.sh` |
+| Paper | `scripts\docker-run-local-paper.bat` | `docker compose --profile paper up --build` |
+| **Live** | `scripts\docker-run-production.bat` | `./scripts/docker-run-production.sh` |
 
-## Manual commands
+Live scripts run **`setup-env`** first (creates `.env`, opens editor), then ask for **`YES`**.
+
+---
+
+## Manual compose
 
 ```bash
-# Local / safe
+# Safe
 docker compose --profile local up --build --abort-on-container-exit
 
 # Paper
 docker compose --profile paper up --build --abort-on-container-exit
 
-# Production (requires .env)
+# Live (requires .env on host)
 docker compose --profile production up --build
 ```
 
+---
+
 ## Paper / simulation file
 
-Paper and production modes save state to **`data/simulation.json`** (not the project root).
+State is saved to **`data/simulation.json`** on your machine.
 
-One-click scripts run `docker-init-data` first so Docker does not create a wrong `simulation.json` **folder**.
+If you see `EISDIR` errors, run:
 
-If you already saw `EISDIR: illegal operation on a directory`:
+```bash
+scripts/docker-init-data.ps1   # Windows
+bash scripts/docker-init-data.sh
+```
 
-1. Stop containers: `docker compose down`
-2. If `simulation.json` in the project root is a **folder**, delete that folder.
-3. Run `scripts\docker-run-local-paper.bat` again.
+---
 
-## Security notes
+## Security
 
-- **Do not** `COPY .env` into the Dockerfile (we don't).
-- Use **burner wallet** only for `production` profile.
-- Production compose uses `env_file: .env` — file stays on host.
-- Firewall: container uses bridge network; egress still reaches Polymarket APIs.
-
-See [SAFE_EXECUTION.md](./SAFE_EXECUTION.md).
+- Do not `COPY .env` into the image (we do not).
+- Burner wallet only for `production` profile.
+- See [SAFE_EXECUTION.md](./SAFE_EXECUTION.md).
