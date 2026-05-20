@@ -1,0 +1,77 @@
+# One-click Docker profiles:
+#   Local (safe):     docker compose --profile local up --build
+#   Production:       docker compose --profile production up --build
+# Requires Docker Desktop: https://www.docker.com/products/docker-desktop/
+
+services:
+  weatherbot-local:
+    profiles: ["local"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BOT_MODE: signal
+    image: weatherbot:local
+    container_name: weatherbot-local
+    restart: "no"
+    environment:
+      NODE_ENV: production
+      # Optional overrides (no wallet secrets required for signal mode)
+      LOCATIONS: ${LOCATIONS:-nyc,london,seattle}
+      ENTRY_THRESHOLD: ${ENTRY_THRESHOLD:-0.15}
+      EXIT_THRESHOLD: ${EXIT_THRESHOLD:-0.45}
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      - weatherbot-net
+
+  weatherbot-paper:
+    profiles: ["paper"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BOT_MODE: paper
+    image: weatherbot:paper
+    container_name: weatherbot-paper
+    restart: "no"
+    environment:
+      NODE_ENV: production
+      LOCATIONS: ${LOCATIONS:-nyc,london,seattle}
+      SIMULATION_FILE: /app/data/simulation.json
+    volumes:
+      - ./data:/app/data
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - weatherbot-net
+
+  weatherbot-production:
+    profiles: ["production"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BOT_MODE: execute
+    image: weatherbot:production
+    container_name: weatherbot-production
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    environment:
+      NODE_ENV: production
+      SIMULATION_FILE: /app/data/simulation.json
+    volumes:
+      - ./data:/app/data
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - weatherbot-net
+
+networks:
+  weatherbot-net:
+    driver: bridge

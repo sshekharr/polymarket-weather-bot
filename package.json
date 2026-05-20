@@ -1,0 +1,49 @@
+{
+  "name": "weatherbot-ts",
+  "version": "1.0.0",
+  "description": "TypeScript fork of the Weather Trading Bot for Polymarket.",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "preinstall": "node scripts/block-malicious-deps.cjs",
+    "build": "tsc",
+    "start": "npm run signal",
+    "signal": "npm run build && node dist/index.js",
+    "paper": "npm run build && node dist/index.js --live",
+    "execute": "npm run build && node dist/index.js --execute",
+    "trade": "npm run build && node dist/index.js --execute --interval 30",
+    "positions": "npm run build && node dist/index.js --positions",
+    "reset": "npm run build && node dist/index.js --reset",
+    "preflight": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/security-preflight.ps1",
+    "local:safe": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run-local.ps1",
+    "production:live": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run-production.ps1",
+    "docker:local": "docker compose --profile local up --build --abort-on-container-exit",
+    "docker:production": "docker compose --profile production up --build"
+  },
+  "keywords": [
+    "weather",
+    "polymarket",
+    "trading",
+    "bot",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@ethersproject/wallet": "5.8.0",
+    "@polymarket/clob-client-v2": "1.0.6",
+    "axios": "1.7.9",
+    "chalk": "5.3.0",
+    "dotenv": "16.4.7",
+    "yargs": "17.7.2"
+  },
+  "devDependencies": {
+    "@types/dotenv": "6.1.1",
+    "@types/node": "22.10.5",
+    "@types/yargs": "17.0.33",
+    "ts-node": "10.9.2",
+    "typescript": "5.7.3"
+  }
+}
